@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SmartLine</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Fredoka', system-ui, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #3FA9FF 0%, #8FCBFF 100%);
+    padding: 24px;
+    position: relative;
+    overflow-x: hidden;
+  }
+  .blob { position: absolute; border-radius: 50%; filter: blur(30px); opacity: .9; pointer-events: none; }
+  .b1 { top: 16px; left: 16px; width: 220px; height: 170px; background: #F7D32A; }
+  .b2 { top: 30px; right: 24px; width: 220px; height: 170px; background: #27C940; }
+  .b3 { bottom: 0; left: 0; width: 280px; height: 220px; background: #F25C4C; opacity: .8; }
+  .b4 { bottom: 16px; right: 16px; width: 280px; height: 220px; background: #2D7BF4; opacity: .8; }
+
+  .container { position: relative; max-width: 1100px; margin: 0 auto; }
+  h1.title {
+    text-align: center;
+    color: white;
+    font-weight: 900;
+    font-size: clamp(56px, 9vw, 110px);
+    text-shadow: 0 6px 0 rgba(0,0,0,0.08);
+    letter-spacing: 1px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin-top: 24px;
+  }
+  @media (min-width: 768px) { .grid { grid-template-columns: 1fr 1fr; } }
+
+  .card {
+    background: white;
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  }
+  .card h2 {
+    color: #2D7BF4;
+    font-weight: 700;
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+  .field { margin-bottom: 12px; }
+  .field label {
+    display: block;
+    color: #2D7BF4;
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+  .field input {
+    width: 100%;
+    border-radius: 999px;
+    border: 2px solid #7FB8FF;
+    padding: 10px 16px;
+    outline: none;
+    font-family: inherit;
+    font-size: 15px;
+    color: #333;
+  }
+  .field input:focus { border-color: #2D7BF4; }
+
+  .btn {
+    display: block;
+    width: 100%;
+    border: none;
+    border-radius: 999px;
+    padding: 14px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 20px;
+    color: white;
+    cursor: pointer;
+    margin-bottom: 12px;
+    transition: transform .15s, background .2s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn.on { background: #2D7BF4; }
+  .btn.off { background: #A8C5F5; }
+
+  .status { margin-top: 12px; text-align: center; font-weight: 700; }
+  .status.ok { color: #18a34a; }
+  .status.no { color: #e54040; }
+
+  .rain-title { color: #2D7BF4; font-weight: 900; font-size: clamp(32px, 5vw, 48px); text-align: center; margin-bottom: 16px; }
+  .icon-wrap { display: flex; justify-content: center; align-items: center; min-height: 180px; padding: 16px 0; }
+  .toggle-sensor {
+    display: block; margin: 8px auto 0; padding: 8px 20px;
+    border: none; border-radius: 999px; background: #2D7BF4; color: white;
+    font-family: inherit; font-weight: 700; cursor: pointer;
+  }
+  .stack { display: flex; flex-direction: column; gap: 24px; }
+</style>
+</head>
+<body>
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+  <div class="blob b4"></div>
+
+  <div class="container">
+    <h1 class="title">SmartLine💧</h1>
+
+    <div class="grid">
+      <!-- Cloud sync -->
+      <div class="card">
+        <h2>Cloud sync</h2>
+        <div class="field"><label>Api Key</label><input id="apiKey" type="text" /></div>
+        <div class="field"><label>DataBase url</label><input id="dbUrl" type="text" /></div>
+        <div class="field"><label>Node Path</label><input id="nodePath" type="text" /></div>
+        <p id="cloudStatus" class="status no">Belum terhubung</p>
+      </div>
+
+      <!-- Hardware link -->
+      <div class="card">
+        <h2>Hard ware link</h2>
+        <button id="btnConnect" class="btn on">Connect</button>
+        <button id="btnDisconnect" class="btn off">Disconnect</button>
+        <p id="hwStatus" class="status no">Belum terhubung</p>
+      </div>
+
+      <!-- Rain detected -->
+      <div class="card">
+        <h2 id="rainTitle" class="rain-title">Rain detected</h2>
+        <div id="iconWrap" class="icon-wrap"></div>
+        <button id="toggleSensor" class="toggle-sensor">Toggle sensor</button>
+      </div>
+
+      <!-- Mode + Servo -->
+      <div class="stack">
+        <div class="card">
+          <h2>Mode</h2>
+          <button id="btnAuto" class="btn on">Outomatic</button>
+          <button id="btnManual" class="btn off">Manual</button>
+        </div>
+        <div class="card">
+          <h2>Servo</h2>
+          <button id="btnOn" class="btn off">On</button>
+          <button id="btnOff" class="btn on">Of</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const rainSVG = `
+    <svg width="160" height="160" viewBox="0 0 160 160" fill="none">
+      <ellipse cx="80" cy="70" rx="55" ry="35" fill="#2D7BF4" />
+      <ellipse cx="55" cy="80" rx="30" ry="25" fill="#4A90FF" />
+      <ellipse cx="105" cy="80" rx="30" ry="25" fill="#1E6BE0" />
+      <path d="M60 115 L52 140 Q52 148 60 148 Q68 148 68 140 Z" fill="#3FB8FF" />
+      <path d="M85 120 L77 145 Q77 153 85 153 Q93 153 93 145 Z" fill="#3FB8FF" />
+      <path d="M110 115 L102 140 Q102 148 110 148 Q118 148 118 140 Z" fill="#3FB8FF" />
+    </svg>`;
+  const shirtSVG = `
+    <svg width="160" height="160" viewBox="0 0 160 160" fill="none">
+      <path d="M50 30 L30 50 L20 80 L40 90 L40 140 Q40 145 45 145 L115 145 Q120 145 120 140 L120 90 L140 80 L130 50 L110 30 L95 30 Q90 45 80 45 Q70 45 65 30 Z"
+        fill="#2D7BF4" stroke="#1E6BE0" stroke-width="3" />
+      <path d="M65 30 Q80 50 95 30" stroke="#1E6BE0" stroke-width="3" fill="none" />
+    </svg>`;
+
+  // Cloud sync
+  const apiKey = document.getElementById('apiKey');
+  const dbUrl = document.getElementById('dbUrl');
+  const nodePath = document.getElementById('nodePath');
+  const cloudStatus = document.getElementById('cloudStatus');
+  function updateCloud() {
+    const ok = apiKey.value.trim() && dbUrl.value.trim() && nodePath.value.trim();
+    cloudStatus.textContent = ok ? 'Sudah terhubung' : 'Belum terhubung';
+    cloudStatus.className = 'status ' + (ok ? 'ok' : 'no');
+  }
+  [apiKey, dbUrl, nodePath].forEach(el => el.addEventListener('input', updateCloud));
+
+  // Hardware
+  const btnConnect = document.getElementById('btnConnect');
+  const btnDisconnect = document.getElementById('btnDisconnect');
+  const hwStatus = document.getElementById('hwStatus');
+  function setHW(connected) {
+    btnConnect.className = 'btn ' + (connected ? 'off' : 'on');
+    btnDisconnect.className = 'btn ' + (connected ? 'on' : 'off');
+    hwStatus.textContent = connected ? 'Terhubung ke hardware' : 'Belum terhubung';
+    hwStatus.className = 'status ' + (connected ? 'ok' : 'no');
+  }
+  btnConnect.onclick = () => setHW(true);
+  btnDisconnect.onclick = () => setHW(false);
+
+  // Mode
+  const btnAuto = document.getElementById('btnAuto');
+  const btnManual = document.getElementById('btnManual');
+  function setMode(auto) {
+    btnAuto.className = 'btn ' + (auto ? 'on' : 'off');
+    btnManual.className = 'btn ' + (auto ? 'off' : 'on');
+  }
+  btnAuto.onclick = () => setMode(true);
+  btnManual.onclick = () => setMode(false);
+
+  // Servo
+  const btnOn = document.getElementById('btnOn');
+  const btnOff = document.getElementById('btnOff');
+  function setServo(on) {
+    btnOn.className = 'btn ' + (on ? 'on' : 'off');
+    btnOff.className = 'btn ' + (on ? 'off' : 'on');
+  }
+  btnOn.onclick = () => setServo(true);
+  btnOff.onclick = () => setServo(false);
+  setServo(false);
+
+  // Rain
+  const iconWrap = document.getElementById('iconWrap');
+  const rainTitle = document.getElementById('rainTitle');
+  let raining = true;
+  function setRain(r) {
+    raining = r;
+    iconWrap.innerHTML = r ? rainSVG : shirtSVG;
+    rainTitle.textContent = r ? 'Rain detected' : 'No rain';
+  }
+  document.getElementById('toggleSensor').onclick = () => setRain(!raining);
+  setRain(true);
+</script>
+</body>
+</html>
