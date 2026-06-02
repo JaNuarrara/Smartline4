@@ -93,7 +93,7 @@
   .status.ok { color: #18a34a; }
   .status.no { color: #e54040; }
 
-  /* Style tambahan untuk pembungkus gambar agar responsif & ideal ukurannya */
+  /* Style untuk pembungkus gambar bagian Hardware */
   .img-wrap {
     display: flex;
     justify-content: center;
@@ -101,9 +101,24 @@
     margin-bottom: 16px;
   }
   .img-wrap img {
-    max-width: 130px; /* Ukuran proporsional agar pas di dalam card */
+    max-width: 130px;
     height: auto;
     object-fit: contain;
+  }
+
+  /* Style baru untuk tata letak konten Servo (Gambar di kiri, tombol di kanan) */
+  .servo-layout {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .servo-img {
+    max-width: 110px; /* Ukuran proporsional agar seimbang berdampingan dengan tombol */
+    height: auto;
+    object-fit: contain;
+  }
+  .servo-buttons {
+    flex: 1;
   }
 
   .rain-title { color: #2D7BF4; font-weight: 900; font-size: clamp(32px, 5vw, 48px); text-align: center; margin-bottom: 16px; }
@@ -156,10 +171,16 @@
           <button id="btnAuto" class="btn on">Outomatic</button>
           <button id="btnManual" class="btn off">Manual</button>
         </div>
+        
         <div class="card">
           <h2>Servo</h2>
-          <button id="btnOn" class="btn off">On</button>
-          <button id="btnOff" class="btn on">Of</button>
+          <div class="servo-layout">
+            <img src="Group 6.png" alt="Mechanic Mascot" class="servo-img">
+            <div class="servo-buttons">
+              <button id="btnOn" class="btn off">On</button>
+              <button id="btnOff" class="btn on">Of</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
