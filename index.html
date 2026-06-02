@@ -93,6 +93,19 @@
   .status.ok { color: #18a34a; }
   .status.no { color: #e54040; }
 
+  /* Style tambahan untuk pembungkus gambar agar responsif & ideal ukurannya */
+  .img-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .img-wrap img {
+    max-width: 130px; /* Ukuran proporsional agar pas di dalam card */
+    height: auto;
+    object-fit: contain;
+  }
+
   .rain-title { color: #2D7BF4; font-weight: 900; font-size: clamp(32px, 5vw, 48px); text-align: center; margin-bottom: 16px; }
   .icon-wrap { display: flex; justify-content: center; align-items: center; min-height: 180px; padding: 16px 0; }
   .toggle-sensor {
@@ -113,7 +126,6 @@
     <h1 class="title">SmartLine💧</h1>
 
     <div class="grid">
-      <!-- Cloud sync -->
       <div class="card">
         <h2>Cloud sync</h2>
         <div class="field"><label>Api Key</label><input id="apiKey" type="text" /></div>
@@ -122,22 +134,22 @@
         <p id="cloudStatus" class="status no">Belum terhubung</p>
       </div>
 
-      <!-- Hardware link -->
       <div class="card">
         <h2>Hard ware link</h2>
+        <div class="img-wrap">
+          <img src="Group 8.png" alt="Astronaut Mascot">
+        </div>
         <button id="btnConnect" class="btn on">Connect</button>
         <button id="btnDisconnect" class="btn off">Disconnect</button>
         <p id="hwStatus" class="status no">Belum terhubung</p>
       </div>
 
-      <!-- Rain detected -->
       <div class="card">
         <h2 id="rainTitle" class="rain-title">Rain detected</h2>
         <div id="iconWrap" class="icon-wrap"></div>
         <button id="toggleSensor" class="toggle-sensor">Toggle sensor</button>
       </div>
 
-      <!-- Mode + Servo -->
       <div class="stack">
         <div class="card">
           <h2>Mode</h2>
