@@ -1,232 +1,454 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>SmartLine</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700;900&display=swap" rel="stylesheet">
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Fredoka', system-ui, sans-serif;
-    min-height: 100vh;
-    background: linear-gradient(180deg, #3FA9FF 0%, #8FCBFF 100%);
-    padding: 24px;
-    position: relative;
-    overflow-x: hidden;
-  }
-  .blob { position: absolute; border-radius: 50%; filter: blur(30px); opacity: .9; pointer-events: none; }
-  .b1 { top: 16px; left: 16px; width: 220px; height: 170px; background: #F7D32A; }
-  .b2 { top: 30px; right: 24px; width: 220px; height: 170px; background: #27C940; }
-  .b3 { bottom: 0; left: 0; width: 280px; height: 220px; background: #F25C4C; opacity: .8; }
-  .b4 { bottom: 16px; right: 16px; width: 280px; height: 220px; background: #2D7BF4; opacity: .8; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartLine - Smart Roof System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 
-  .container { position: relative; max-width: 1100px; margin: 0 auto; }
-  h1.title {
-    text-align: center;
-    color: white;
-    font-weight: 900;
-    font-size: clamp(56px, 9vw, 110px);
-    text-shadow: 0 6px 0 rgba(0,0,0,0.08);
-    letter-spacing: 1px;
-  }
-  .grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 24px;
-    margin-top: 24px;
-  }
-  @media (min-width: 768px) { .grid { grid-template-columns: 1fr 1fr; } }
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { 'balsamiq': ['"Balsamiq Sans"', 'cursive'] },
+                    colors: {
+                        'sl-bg-blue': '#2575fc',
+                        'sl-card-bg': '#ffffff',
+                        'sl-blue-primary': '#2a7ff5',
+                        'sl-blue-secondary': '#6ba3f5',
+                        'sl-blue-light': '#eef5ff',
+                        'sl-text-blue': '#0084ff',
+                        'sl-term-bg': '#0f2c1b',
+                    }
+                }
+            }
+        }
+    </script>
 
-  .card {
-    background: white;
-    border-radius: 18px;
-    padding: 24px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-  }
-  .card h2 {
-    color: #2D7BF4;
-    font-weight: 700;
-    font-size: 24px;
-    margin-bottom: 16px;
-  }
-  .field { margin-bottom: 12px; }
-  .field label {
-    display: block;
-    color: #2D7BF4;
-    font-weight: 700;
-    font-size: 13px;
-    margin-bottom: 4px;
-  }
-  .field input {
-    width: 100%;
-    border-radius: 999px;
-    border: 2px solid #7FB8FF;
-    padding: 10px 16px;
-    outline: none;
-    font-family: inherit;
-    font-size: 15px;
-    color: #333;
-  }
-  .field input:focus { border-color: #2D7BF4; }
-
-  .btn {
-    display: block;
-    width: 100%;
-    border: none;
-    border-radius: 999px;
-    padding: 14px;
-    font-family: inherit;
-    font-weight: 700;
-    font-size: 20px;
-    color: white;
-    cursor: pointer;
-    margin-bottom: 12px;
-    transition: transform .15s, background .2s;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  }
-  .btn:active { transform: scale(0.97); }
-  .btn.on { background: #2D7BF4; }
-  .btn.off { background: #A8C5F5; }
-
-  .status { margin-top: 12px; text-align: center; font-weight: 700; }
-  .status.ok { color: #18a34a; }
-  .status.no { color: #e54040; }
-
-  .rain-title { color: #2D7BF4; font-weight: 900; font-size: clamp(32px, 5vw, 48px); text-align: center; margin-bottom: 16px; }
-  .icon-wrap { display: flex; justify-content: center; align-items: center; min-height: 180px; padding: 16px 0; }
-  .toggle-sensor {
-    display: block; margin: 8px auto 0; padding: 8px 20px;
-    border: none; border-radius: 999px; background: #2D7BF4; color: white;
-    font-family: inherit; font-weight: 700; cursor: pointer;
-  }
-  .stack { display: flex; flex-direction: column; gap: 24px; }
-</style>
+    <style>
+        body {
+            background: linear-gradient(135deg, #2575fc 0%, #1a56db 100%);
+            font-family: 'Balsamiq Sans', cursive;
+            min-height: 100vh;
+        }
+        .terminal-font {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace !important;
+        }
+    </style>
 </head>
-<body>
-  <div class="blob b1"></div>
-  <div class="blob b2"></div>
-  <div class="blob b3"></div>
-  <div class="blob b4"></div>
+<body class="font-balsamiq text-gray-700 pb-12">
 
-  <div class="container">
-    <h1 class="title">SmartLine💧</h1>
-
-    <div class="grid">
-      <!-- Cloud sync -->
-      <div class="card">
-        <h2>Cloud sync</h2>
-        <div class="field"><label>Api Key</label><input id="apiKey" type="text" /></div>
-        <div class="field"><label>DataBase url</label><input id="dbUrl" type="text" /></div>
-        <div class="field"><label>Node Path</label><input id="nodePath" type="text" /></div>
-        <p id="cloudStatus" class="status no">Belum terhubung</p>
-      </div>
-
-      <!-- Hardware link -->
-      <div class="card">
-        <h2>Hard ware link</h2>
-        <button id="btnConnect" class="btn on">Connect</button>
-        <button id="btnDisconnect" class="btn off">Disconnect</button>
-        <p id="hwStatus" class="status no">Belum terhubung</p>
-      </div>
-
-      <!-- Rain detected -->
-      <div class="card">
-        <h2 id="rainTitle" class="rain-title">Rain detected</h2>
-        <div id="iconWrap" class="icon-wrap"></div>
-        <button id="toggleSensor" class="toggle-sensor">Toggle sensor</button>
-      </div>
-
-      <!-- Mode + Servo -->
-      <div class="stack">
-        <div class="card">
-          <h2>Mode</h2>
-          <button id="btnAuto" class="btn on">Outomatic</button>
-          <button id="btnManual" class="btn off">Manual</button>
+<!-- CONTAINER -->
+<div class="container mx-auto px-4 max-w-4xl pt-8">
+    
+    <!-- TITLE LOGO HEADER -->
+    <div class="flex flex-col items-center justify-center mb-8 relative">
+        <div class="flex items-center gap-3 bg-white/10 backdrop-blur-md px-8 py-4 rounded-full border border-white/20 shadow-lg">
+            <h1 class="text-4xl md:text-5xl text-white font-bold tracking-wide select-none">SmartLine</h1>
+            <div class="relative bg-white p-2 rounded-2xl shadow-md w-12 h-12 flex items-center justify-center">
+                <i class="ph-fill ph-robot text-3xl text-sl-blue-primary"></i>
+                <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                </span>
+            </div>
         </div>
-        <div class="card">
-          <h2>Servo</h2>
-          <button id="btnOn" class="btn off">On</button>
-          <button id="btnOff" class="btn on">Of</button>
-        </div>
-      </div>
     </div>
-  </div>
 
-<script>
-  const rainSVG = `
-    <svg width="160" height="160" viewBox="0 0 160 160" fill="none">
-      <ellipse cx="80" cy="70" rx="55" ry="35" fill="#2D7BF4" />
-      <ellipse cx="55" cy="80" rx="30" ry="25" fill="#4A90FF" />
-      <ellipse cx="105" cy="80" rx="30" ry="25" fill="#1E6BE0" />
-      <path d="M60 115 L52 140 Q52 148 60 148 Q68 148 68 140 Z" fill="#3FB8FF" />
-      <path d="M85 120 L77 145 Q77 153 85 153 Q93 153 93 145 Z" fill="#3FB8FF" />
-      <path d="M110 115 L102 140 Q102 148 110 148 Q118 148 118 140 Z" fill="#3FB8FF" />
-    </svg>`;
-  const shirtSVG = `
-    <svg width="160" height="160" viewBox="0 0 160 160" fill="none">
-      <path d="M50 30 L30 50 L20 80 L40 90 L40 140 Q40 145 45 145 L115 145 Q120 145 120 140 L120 90 L140 80 L130 50 L110 30 L95 30 Q90 45 80 45 Q70 45 65 30 Z"
-        fill="#2D7BF4" stroke="#1E6BE0" stroke-width="3" />
-      <path d="M65 30 Q80 50 95 30" stroke="#1E6BE0" stroke-width="3" fill="none" />
-    </svg>`;
+    <!-- MAIN GRID SECTION -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+        
+        <!-- LEFT COLUMN: CLOUD SYNC -->
+        <div class="bg-white rounded-[2rem] p-8 shadow-xl border-4 border-white/40 relative overflow-hidden h-full min-h-[420px] flex flex-col justify-between">
+            <!-- Decorative Flower/Cloud Background Elements like Image -->
+            <div class="absolute -top-4 -left-4 w-12 h-12 opacity-20 text-sl-blue-primary text-4xl">🌼</div>
+            <div class="absolute -bottom-4 -right-4 w-12 h-12 opacity-20 text-sl-blue-primary text-4xl">🌼</div>
+            
+            <div>
+                <div class="flex items-center gap-2 mb-6">
+                    <i class="ph-fill ph-cloud text-sl-text-blue text-2xl"></i>
+                    <h2 class="text-2xl text-sl-text-blue font-bold tracking-wide">Cloud sync</h2>
+                </div>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-sl-blue-secondary mb-1 ml-2">Api Key</label>
+                        <input type="text" id="fb-apiKey" class="w-full bg-white border-2 border-sl-blue-secondary/30 rounded-2xl px-4 py-3 outline-none focus:border-sl-blue-primary transition text-gray-700 shadow-inner" placeholder="Enter API Key...">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-sl-blue-secondary mb-1 ml-2">DataBase url</label>
+                        <input type="text" id="fb-dbUrl" class="w-full bg-white border-2 border-sl-blue-secondary/30 rounded-2xl px-4 py-3 outline-none focus:border-sl-blue-primary transition text-gray-700 shadow-inner" placeholder="Enter Database URL...">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-sl-blue-secondary mb-1 ml-2">Node Path</label>
+                        <input type="text" id="fb-path" class="w-full bg-white border-2 border-sl-blue-secondary/30 rounded-2xl px-4 py-3 outline-none focus:border-sl-blue-primary transition text-gray-700 shadow-inner" placeholder="e.g. roof/system1">
+                    </div>
+                </div>
+            </div>
 
-  // Cloud sync
-  const apiKey = document.getElementById('apiKey');
-  const dbUrl = document.getElementById('dbUrl');
-  const nodePath = document.getElementById('nodePath');
-  const cloudStatus = document.getElementById('cloudStatus');
-  function updateCloud() {
-    const ok = apiKey.value.trim() && dbUrl.value.trim() && nodePath.value.trim();
-    cloudStatus.textContent = ok ? 'Sudah terhubung' : 'Belum terhubung';
-    cloudStatus.className = 'status ' + (ok ? 'ok' : 'no');
-  }
-  [apiKey, dbUrl, nodePath].forEach(el => el.addEventListener('input', updateCloud));
+            <button id="btn-connect-fb" class="w-full mt-6 bg-sl-blue-primary hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-2xl shadow-md transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2 text-lg">
+                <i class="ph-bold ph-link"></i> Connect with Firebase
+            </button>
+        </div>
 
-  // Hardware
-  const btnConnect = document.getElementById('btnConnect');
-  const btnDisconnect = document.getElementById('btnDisconnect');
-  const hwStatus = document.getElementById('hwStatus');
-  function setHW(connected) {
-    btnConnect.className = 'btn ' + (connected ? 'off' : 'on');
-    btnDisconnect.className = 'btn ' + (connected ? 'on' : 'off');
-    hwStatus.textContent = connected ? 'Terhubung ke hardware' : 'Belum terhubung';
-    hwStatus.className = 'status ' + (connected ? 'ok' : 'no');
-  }
-  btnConnect.onclick = () => setHW(true);
-  btnDisconnect.onclick = () => setHW(false);
+        <!-- RIGHT COLUMN: HARDWARE LINK & MODE -->
+        <div class="space-y-6">
+            
+            <!-- HARDWARE LINK PANEL -->
+            <div class="bg-white rounded-[2rem] p-6 shadow-xl border-4 border-white/40">
+                <h2 class="text-xl text-sl-text-blue font-bold mb-4 tracking-wide ml-2">Hard ware link</h2>
+                <div class="space-y-3">
+                    <button id="btn-connect-ble" class="w-full bg-sl-blue-primary hover:bg-blue-600 text-white font-bold py-3 rounded-2xl shadow-md transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                        <i class="ph-bold ph-bluetooth"></i> Microbit connected
+                    </button>
+                    <button id="btn-disconnect-ble" class="w-full bg-sl-blue-secondary text-white font-bold py-3 rounded-2xl flex items-center justify-center gap-2 transition hover:bg-blue-400 hidden">
+                        <i class="ph-bold ph-x"></i> Microbit Disconnected
+                    </button>
+                </div>
+                <div id="ble-status" class="mt-3 text-center text-xs font-bold text-gray-400">● Disconnected</div>
+            </div>
 
-  // Mode
-  const btnAuto = document.getElementById('btnAuto');
-  const btnManual = document.getElementById('btnManual');
-  function setMode(auto) {
-    btnAuto.className = 'btn ' + (auto ? 'on' : 'off');
-    btnManual.className = 'btn ' + (auto ? 'off' : 'on');
-  }
-  btnAuto.onclick = () => setMode(true);
-  btnManual.onclick = () => setMode(false);
+            <!-- MODE CONTROL PANEL -->
+            <div class="bg-white rounded-[2rem] p-6 shadow-xl border-4 border-white/40 relative">
+                <div class="absolute top-2 right-6 text-xl opacity-40">☁️</div>
+                <h2 class="text-xl text-sl-text-blue font-bold mb-4 tracking-wide ml-2">Mode</h2>
+                <div class="space-y-3">
+                    <button id="btn-auto" onclick="setMode('auto')" class="w-full bg-sl-blue-primary text-white font-bold py-3 rounded-2xl shadow-md transition flex items-center justify-center gap-2 text-lg border-2 border-transparent">
+                        <i class="ph-fill ph-robot"></i> Outomatic
+                    </button>
+                    <button id="btn-manual" onclick="setMode('manual')" class="w-full bg-sl-blue-secondary text-white/90 font-bold py-3 rounded-2xl hover:bg-blue-400 transition flex items-center justify-center gap-2 text-lg border-2 border-transparent">
+                        <i class="ph-fill ph-hand-palm"></i> Manual
+                    </button>
+                </div>
+            </div>
 
-  // Servo
-  const btnOn = document.getElementById('btnOn');
-  const btnOff = document.getElementById('btnOff');
-  function setServo(on) {
-    btnOn.className = 'btn ' + (on ? 'on' : 'off');
-    btnOff.className = 'btn ' + (on ? 'off' : 'on');
-  }
-  btnOn.onclick = () => setServo(true);
-  btnOff.onclick = () => setServo(false);
-  setServo(false);
+        </div>
+    </div>
 
-  // Rain
-  const iconWrap = document.getElementById('iconWrap');
-  const rainTitle = document.getElementById('rainTitle');
-  let raining = true;
-  function setRain(r) {
-    raining = r;
-    iconWrap.innerHTML = r ? rainSVG : shirtSVG;
-    rainTitle.textContent = r ? 'Rain detected' : 'No rain';
-  }
-  document.getElementById('toggleSensor').onclick = () => setRain(!raining);
-  setRain(true);
+    <!-- BOTTOM ROW GRID: RAIN DETECTED & ROOF STATUS -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        
+        <!-- RAIN DETECTED STATUS PANEL -->
+        <div class="bg-white rounded-[2rem] p-8 shadow-xl border-4 border-white/40 flex flex-col items-center justify-center text-center min-h-[320px]">
+            <h2 class="text-3xl md:text-4xl text-sl-text-blue font-bold mb-6 tracking-wide" id="rain-status-text">Rain detected</h2>
+            
+            <div class="relative p-4 bg-sl-blue-light rounded-full mb-4 animate-bounce">
+                <!-- Rain Display SVG / Icon dynamically changing color -->
+                <i id="rain-icon" class="ph-fill ph-cloud-rain text-sl-blue-primary text-8xl drop-shadow-md transition-colors duration-500"></i>
+            </div>
+            
+            <!-- Hidden input slider/toggle simulate rain sensor input (useful for testing without hardware) -->
+            <div class="w-full max-w-xs mt-2">
+                <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Simulate Rain Sensor</label>
+                <select id="simulate-rain" class="w-full bg-gray-50 border border-gray-200 rounded-xl py-1.5 px-3 text-sm font-bold text-gray-600 outline-none focus:border-sl-blue-primary" onchange="toggleRainSimulation(this.value)">
+                    <option value="rain">Raining (Detected)</option>
+                    <option value="clear" selected>Clear Sky (No Rain)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- ROOF STATUS PANEL (MANUAL OVERRIDE BUTTONS) -->
+        <div class="bg-white rounded-[2rem] p-8 shadow-xl border-4 border-white/40 flex flex-col items-center justify-center min-h-[320px]">
+            <h2 class="text-3xl md:text-4xl text-sl-text-blue font-bold mb-6 tracking-wide lowercase">roof</h2>
+            
+            <div class="w-full space-y-4 max-w-xs flex flex-col items-center">
+                <button id="btn-roof-open" onclick="controlRoof(true)" class="w-full bg-sl-blue-primary text-white font-bold py-3.5 rounded-2xl shadow-md transition text-xl disabled:opacity-50 disabled:cursor-not-allowed">
+                    Open
+                </button>
+                
+                <!-- Center Diamond Accent from reference image -->
+                <div class="text-yellow-400 text-2xl my-1 animate-pulse">✦</div>
+                
+                <button id="btn-roof-close" onclick="controlRoof(false)" class="w-full bg-sl-blue-secondary text-white font-bold py-3.5 rounded-2xl shadow-md transition text-xl disabled:opacity-50 disabled:cursor-not-allowed">
+                    Close
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- RE-IMPLEMENTED SYSTEM LOG TERMINAL FROM ORIGINAL -->
+    <div class="bg-sl-term-bg rounded-3xl p-4 shadow-2xl border-2 border-[#1a4a2d] mt-8">
+        <div class="flex items-center justify-between mb-3 border-b border-[#1a4a2d] pb-3">
+            <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
+                <div class="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
+                <div class="w-3 h-3 rounded-full bg-[#27c93f]"></div>
+                <span class="ml-4 terminal-font text-xs text-[#ff5f56] font-bold tracking-wider lowercase">system_terminal – smartline_roof</span>
+            </div>
+            <button id="btnClearLog" class="border border-[#ff5f56] text-[#ff5f56] hover:bg-[#ff5f56] hover:text-white transition rounded-full px-4 py-1 text-xs font-bold flex items-center gap-1">
+                <i class="ph-bold ph-trash"></i> Clear
+            </button>
+        </div>
+        <div id="terminal-content" class="terminal-font bg-[#050f09] rounded-2xl h-36 p-4 text-[11px] text-[#27c93f] overflow-y-auto">
+            <div class="opacity-70">welcome to smartline roof system terminal...</div>
+            <div class="opacity-70">waiting for micro:bit connection...</div>
+        </div>
+    </div>
+
+</div>
+
+<!-- JAVASCRIPT STATE AND LOGIC PRESERVING ALL FUNCTIONALITIES -->
+<script type="module">
+import { initializeApp, getApps, deleteApp }      from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getDatabase, ref, onValue, update, set } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
+// ── BLE UUIDs ──
+const SVC = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
+const TX  = '6e400002-b5a3-f393-e0a9-e50e24dcca9e'; // micro:bit → web
+const RX  = '6e400003-b5a3-f393-e0a9-e50e24dcca9e'; // web → micro:bit
+
+// ── Application State ──
+const S = {
+    device: null, rxChar: null, bleBuffer: '',
+    mode: 'auto',      // 'auto' | 'manual'
+    roofOpen: true,    // true = open, false = close (maps to relay logic)
+    rainDetected: false, 
+    db: null, fbPath: ''
+};
+
+const $ = id => document.getElementById(id);
+
+// ── Terminal Logger ──
+function log(msg, color = '#27c93f') {
+    const term = $('terminal-content');
+    if (!term) return;
+    const line = document.createElement('div');
+    line.className  = 'opacity-90 py-0.5 terminal-font';
+    line.style.color = color;
+    line.textContent = `[${new Date().toLocaleTimeString()}] > ${msg}`;
+    term.appendChild(line);
+    term.scrollTop = term.scrollHeight;
+}
+
+// ── Bluetooth Connection ──
+async function connectBLE() {
+    try {
+        log('searching for micro:bit...', '#ffbd2e');
+        S.device = await navigator.bluetooth.requestDevice({
+            filters: [{ namePrefix: 'BBC micro:bit' }],
+            optionalServices: [SVC]
+        });
+        S.device.addEventListener('gattserverdisconnected', onBLEDisconnect);
+        const server  = await S.device.gatt.connect();
+        const service = await server.getPrimaryService(SVC);
+        S.rxChar      = await service.getCharacteristic(RX);
+        const txChar  = await service.getCharacteristic(TX);
+        await txChar.startNotifications();
+        txChar.addEventListener('characteristicvaluechanged', onBLEData);
+        setBLEStatus(true);
+        log(`connected: ${S.device.name} ✅`, '#27c93f');
+    } catch (e) {
+        log('connection failed: ' + e.message.toLowerCase(), '#ff5f56');
+    }
+}
+
+function onBLEDisconnect() {
+    setBLEStatus(false);
+    log('bluetooth connection lost.', '#ff5f56');
+}
+
+function setBLEStatus(ok) {
+    $('btn-connect-ble').classList.toggle('hidden', ok);
+    $('btn-disconnect-ble').classList.toggle('hidden', !ok);
+    $('ble-status').textContent = ok ? '● Connected' : '● Disconnected';
+    $('ble-status').style.color = ok ? '#27c93f' : '#aaa';
+}
+
+// ── Data Processing ──
+function onBLEData(e) {
+    S.bleBuffer += new TextDecoder().decode(e.target.value);
+    const lines = S.bleBuffer.split('
+');
+    S.bleBuffer = lines.pop() ?? '';
+    lines.forEach(line => {
+        line = line.trim();
+        if (!line || !line.includes(':')) return;
+        const idx = line.indexOf(':');
+        const key = line.substring(0, idx).trim();
+        const val = line.substring(idx + 1).trim();
+        log(`rx ← ${key}:${val}`, '#a8ff78');
+        handleIncoming(key, val);
+    });
+}
+
+// ── Incoming Key / Value Handler ──
+function handleIncoming(key, val) {
+    switch (key) {
+        case 'rain':
+            // 1 = rain detected, 0 = clear
+            const isRaining = val.trim() === '1';
+            S.rainDetected = isRaining;
+            applyRainUI(isRaining);
+            
+            // Logic requirement: If outomatic mode and rain detected -> close roof. If clear -> open roof.
+            if (S.mode === 'auto') {
+                if (isRaining) {
+                    log('auto mode: rain detected -> closing roof.', '#ffbd2e');
+                    applyRoofUI(false);
+                } else {
+                    log('auto mode: clear sky -> opening roof.', '#ffbd2e');
+                    applyRoofUI(true);
+                }
+            }
+            break;
+
+        case 'Relay':
+            // Preserving Relay key but mapping it internally to Roof status display
+            // 1 = Relay active (Roof Closed), 0 = Relay inactive (Roof Open)
+            applyRoofUI(val.trim() === '0'); 
+            break;
+
+        case 'mode':
+            // 1 = automatic, 0 = manual
+            applyModeUI(val.trim() === '1' ? 'auto' : 'manual');
+            break;
+    }
+
+    // Firebase Sync Engine
+    if (S.db) {
+        update(ref(S.db, `${S.fbPath}/${key}`), { value: parseFloat(val) || 0 })
+            .catch(() => {});
+    }
+}
+
+// ── Rain Simulation Trigger ──
+window.toggleRainSimulation = function(val) {
+    const sensorValue = (val === 'rain') ? '1' : '0';
+    log(`simulating rain sensor input value: ${sensorValue}`, '#ffbd2e');
+    handleIncoming('rain', sensorValue);
+};
+
+function applyRainUI(isRaining) {
+    const textEl = $('rain-status-text');
+    const iconEl = $('rain-icon');
+    
+    if (isRaining) {
+        textEl.textContent = "Rain detected";
+        iconEl.className = "ph-fill ph-cloud-rain text-sl-blue-primary text-8xl drop-shadow-md transition-colors duration-500";
+    } else {
+        textEl.textContent = "No Rain / Clear";
+        iconEl.className = "ph-fill ph-sun text-yellow-400 text-8xl drop-shadow-md transition-colors duration-500";
+    }
+}
+
+// ── Mode Engine ──
+window.setMode = function(mode) {
+    sendBLE('mode', mode === 'auto' ? 1 : 0);
+    log(`mode command → ${mode} (sent: mode,${mode === 'auto' ? 1 : 0})`, '#ffbd2e');
+
+    applyModeUI(mode);
+
+    if (S.db) update(ref(S.db, `${S.fbPath}/mode`), { value: mode === 'auto' ? 1 : 0 }).catch(() => {});
+};
+
+function applyModeUI(mode) {
+    S.mode = mode;
+    const isAuto = mode === 'auto';
+    
+    const activeClass = "w-full bg-sl-blue-primary text-white font-bold py-3 rounded-2xl shadow-md transition flex items-center justify-center gap-2 text-lg border-2 border-transparent";
+    const inactiveClass = "w-full bg-sl-blue-secondary text-white/90 font-bold py-3 rounded-2xl hover:bg-blue-400 transition flex items-center justify-center gap-2 text-lg border-2 border-transparent opacity-60";
+    
+    $('btn-auto').className = isAuto ? activeClass : inactiveClass;
+    $('btn-manual').className = !isAuto ? activeClass : inactiveClass;
+    
+    // Disable manual controls when in Automatic mode
+    $('btn-roof-open').disabled = isAuto;
+    $('btn-roof-close').disabled = isAuto;
+    
+    log(`mode ui updated → ${mode}`, '#aaffaa');
+    
+    // If switched back to auto, run immediate check based on rain status
+    if (isAuto) {
+        if (S.rainDetected) {
+            applyRoofUI(false);
+        } else {
+            applyRoofUI(true);
+        }
+    }
+}
+
+// ── Roof Control Engine (Replacing Relay Toggle) ──
+window.controlRoof = function(openTarget) {
+    if (S.mode === 'auto') {
+        log('cannot control roof manually in auto mode.', '#ff5f56');
+        return;
+    }
+    
+    // Mapping roof Open/Close state to the original Relay output syntax logic:
+    // Open = Relay 0, Close = Relay 1
+    const relayValue = openTarget ? 0 : 1;
+    sendBLE('Relay', relayValue);
+    log(`roof manual command → ${openTarget ? 'open' : 'close'} (sent: Relay,${relayValue})`, '#ffbd2e');
+
+    applyRoofUI(openTarget);
+
+    if (S.db) update(ref(S.db, `${S.fbPath}/Relay`), { value: relayValue }).catch(() => {});
+};
+
+function applyRoofUI(isOpen) {
+    S.roofOpen = isOpen;
+    const btnOpen = $('btn-roof-open');
+    const btnClose = $('btn-roof-close');
+    
+    const activeBtn = "w-full bg-sl-blue-primary text-white font-bold py-3.5 rounded-2xl shadow-md transition text-xl border-2 border-blue-300 scale-105";
+    const inactiveBtn = "w-full bg-sl-blue-secondary text-white font-bold py-3.5 rounded-2xl shadow-md transition text-xl opacity-60 scale-100";
+    
+    if (isOpen) {
+        btnOpen.className = activeBtn;
+        btnClose.className = inactiveBtn;
+        log('roof status ui updated -> OPEN', '#aaffaa');
+    } else {
+        btnOpen.className = inactiveBtn;
+        btnClose.className = activeBtn;
+        log('roof status ui updated -> CLOSED', '#aaffaa');
+    }
+}
+
+// ── Firebase Connection ──
+async function connectFirebase() {
+    const apiKey = $('fb-apiKey').value.trim();
+    const dbUrl  = $('fb-dbUrl').value.trim();
+    const path   = $('fb-path').value.trim() || 'roof/system1';
+    if (!apiKey || !dbUrl) { alert('Please fill in API Key and Database URL!'); return; }
+    try {
+        const apps = getApps();
+        if (apps.length) await deleteApp(apps[0]);
+        const app = initializeApp({
+            apiKey,
+            databaseURL: dbUrl,
+            projectId: dbUrl.replace('https://','').split('.')[0]
+        });
+        S.db     = getDatabase(app);
+        S.fbPath = path;
+        log(`firebase connected → /${path}`, '#27c93f');
+        onValue(ref(S.db, path), snap => {
+            const d = snap.val();
+            if (!d) return;
+            ['rain','Relay','mode'].forEach(k => {
+                if (d[k] !== undefined) {
+                    handleIncoming(k, String(d[k]?.value ?? d[k]));
+                }
+            });
+        }, err => log('firebase error: ' + err.message, '#ff5f56'));
+    } catch (e) {
+        log('firebase error: ' + e.message, '#ff5f56');
+    }
+}
+
+// ── Event Initialization ──
+$('btn-connect-ble').onclick    = connectBLE;
+$('btn-disconnect-ble').onclick = () => { if (S.device) S.device.gatt.disconnect(); };
+$('btn-connect-fb').onclick     = connectFirebase;
+$('btnClearLog').onclick        = () => { $('terminal-content').innerHTML = ''; };
+
+window.onload = () => {
+    applyModeUI('auto'); // Default startup system state
+    applyRainUI(false);  // Default starting rain sensor simulation state
+    log('smartline roof control system ready — connect firebase & micro:bit 🚀');
+};
 </script>
 </body>
 </html>
