@@ -3,24 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartLine - Smart Roof System v2</title>
+    <title>SmartLine - Smart Roof Controller</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <!-- Firebase standard web SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts: Fredoka & Quicksand for clean, modern, playful UI -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { 'balsamiq': ['"Balsamiq Sans"', 'cursive'] },
+                    fontFamily: { 
+                        'fredoka': ['Fredoka', 'sans-serif'],
+                        'quicksand': ['Quicksand', 'sans-serif']
+                    },
                     colors: {
-                        'sl-bg-blue': '#2575fc',
-                        'sl-card-bg': '#ffffff',
-                        'sl-blue-primary': '#2a7ff5',
-                        'sl-blue-secondary': '#6ba3f5',
-                        'sl-blue-light': '#eef5ff',
-                        'sl-text-blue': '#0084ff',
-                        'sl-term-bg': '#0f2c1b',
+                        'sl-blue-dark': '#0f62fe',
+                        'sl-blue-mid': '#3b82f6',
+                        'sl-blue-light': '#60a5fa',
+                        'sl-blue-bg': '#1e3a8a',
+                        'sl-accent-yellow': '#facc15',
+                        'sl-term-bg': '#0a192f',
                     }
                 }
             }
@@ -29,108 +36,128 @@
 
     <style>
         body {
-            background: linear-gradient(135deg, #2575fc 0%, #1a56db 100%);
-            font-family: 'Balsamiq Sans', cursive;
-            min-height: 100vh;
+            background-color: #3b82f6;
+            background-image: radial-gradient(#1d4ed8 2px, transparent 2px);
+            background-size: 35px 35px;
+            font-family: 'Quicksand', sans-serif;
+        }
+        .title-font {
+            font-family: 'Fredoka', sans-serif;
+        }
+        .floating { animation: floating 3.5s ease-in-out infinite; }
+        .floating-delay-1 { animation: floating 4s ease-in-out infinite 0.5s; }
+        .floating-delay-2 { animation: floating 4.5s ease-in-out infinite 1s; }
+        @keyframes floating {
+            0%   { transform: translateY(0px) rotate(0deg); }
+            50%  { transform: translateY(-12px) rotate(3deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
         }
         .terminal-font {
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace !important;
         }
+        .active-glow { box-shadow: 0 0 25px 5px rgba(59, 130, 246, 0.6) !important; }
+        .rain-glow { box-shadow: 0 0 30px 10px rgba(96, 165, 250, 0.5) !important; }
     </style>
 </head>
-<body class="font-balsamiq text-gray-700 pb-12">
+<body class="text-gray-700 min-h-screen relative overflow-x-hidden pb-12">
 
-<!-- CONTAINER -->
-<div class="container mx-auto px-4 max-w-4xl pt-8">
+<!-- HEADER -->
+<header class="bg-gradient-to-b from-[#1d4ed8] to-[#3b82f6] py-10 relative shadow-md border-b-4 border-[#1d4ed8]/30">
+    <!-- Playful Background Accents resembling the graphic style -->
+    <div class="absolute top-4 left-10 text-5xl floating opacity-30">☁️</div>
+    <div class="absolute bottom-4 left-24 text-4xl floating-delay-1 opacity-20">💧</div>
+    <div class="absolute top-6 right-24 text-5xl floating-delay-2 opacity-30">☀️</div>
+    <div class="absolute bottom-2 right-12 text-4xl floating opacity-20">⚡</div>
     
-    <!-- TITLE LOGO HEADER -->
-    <div class="flex flex-col items-center justify-center mb-8 relative">
-        <div class="flex items-center gap-3 bg-white/10 backdrop-blur-md px-8 py-4 rounded-full border border-white/20 shadow-lg">
-            <h1 class="text-4xl md:text-5xl text-white font-bold tracking-wide select-none">SmartLine</h1>
-            <div class="relative bg-white p-2 rounded-2xl shadow-md w-12 h-12 flex items-center justify-center">
-                <i class="ph-fill ph-robot text-3xl text-sl-blue-primary"></i>
+    <div class="container mx-auto px-4 text-center relative z-10 flex flex-col items-center gap-3">
+        <!-- Reconstructed SmartLine Logo Bar with Robot Mascot Concept -->
+        <div class="flex items-center justify-center gap-3 bg-white/10 px-8 py-3 rounded-full backdrop-blur-sm border border-white/20 shadow-lg">
+            <h1 class="title-font text-white text-4xl md:text-5xl font-bold tracking-wide drop-shadow">SmartLine</h1>
+            <div class="bg-white rounded-2xl p-2 shadow-md flex items-center justify-center relative border-2 border-blue-400">
+                <i class="ph-fill ph-robot text-blue-600 text-3xl"></i>
                 <span class="absolute -top-1 -right-1 flex h-3 w-3">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
                 </span>
             </div>
         </div>
     </div>
+</header>
 
-    <!-- TROUBLESHOOTING GUIDE CARD (IMPORTANT FOR MICROBIT BLE PROBLEMS) -->
-    <div class="bg-amber-50 border-4 border-amber-300 rounded-3xl p-5 mb-6 shadow-lg">
-        <h3 class="text-amber-800 font-bold text-lg mb-2 flex items-center gap-2">
-            <i class="ph-bold ph-warning-circle"></i> Connection Requirements / Kenapa micro:bit Tidak Konek?
-        </h3>
-        <ul class="text-sm text-amber-900 list-disc pl-5 space-y-1 opacity-90">
-            <li><strong>HTTPS / Localhost:</strong> Web Bluetooth hanya berfungsi jika website dibuka melalui protokol aman <code>https://</code> atau via <code>localhost</code> (Live Server).</li>
-            <li><strong>Browser Support:</strong> Gunakan browser berbasis Chromium seperti <strong>Google Chrome</strong>, <strong>Microsoft Edge</strong>, atau <strong>Opera</strong> (Safari dan Firefox tidak mendukung Web Bluetooth secara bawaan).</li>
-            <li><strong>Bluetooth Terbuka:</strong> Pastikan Bluetooth di komputer/HP Anda sudah dinyalakan dan tidak sedang tersambung ke aplikasi lain.</li>
-            <li><strong>Flash Firmware:</strong> Pastikan micro:bit sudah di-flash dengan kode program yang mengaktifkan Bluetooth Service (UART Service) dengan mode "No Bonding" / pasangkan tanpa pin.</li>
-        </ul>
-    </div>
+<!-- MAIN CONTENT CONTAINER -->
+<main class="container mx-auto px-4 max-w-5xl mt-8 space-y-6">
 
-    <!-- MAIN GRID SECTION -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-        
-        <!-- LEFT COLUMN: CLOUD SYNC -->
-        <div class="bg-white rounded-[2rem] p-8 shadow-xl border-4 border-white/40 relative overflow-hidden h-full min-h-[420px] flex flex-col justify-between">
-            <div class="absolute -top-4 -left-4 w-12 h-12 opacity-20 text-sl-blue-primary text-4xl">🌼</div>
-            <div class="absolute -bottom-4 -right-4 w-12 h-12 opacity-20 text-sl-blue-primary text-4xl">🌼</div>
-            
+    <!-- TOP SECTION: CLOUD SYNC & HARDWARE LINK + MODE -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Cloud Sync Box (Left Side) -->
+        <div class="bg-white rounded-[2.5rem] p-8 shadow-xl border-4 border-blue-100 flex flex-col justify-between relative overflow-hidden">
+            <!-- Decorative Flower Graphic Elements mimicking image -->
+            <div class="absolute -top-4 -left-4 w-12 h-12 bg-yellow-400/20 rounded-full blur-sm"></div>
+            <div class="absolute -bottom-4 -right-4 w-16 h-16 bg-blue-400/10 rounded-full"></div>
+
             <div>
-                <div class="flex items-center gap-2 mb-6">
-                    <i class="ph-fill ph-cloud text-sl-text-blue text-2xl"></i>
-                    <h2 class="text-2xl text-sl-text-blue font-bold tracking-wide">Cloud sync</h2>
+                <div class="flex items-center gap-3 mb-6">
+                    <i class="ph-fill ph-cloud-arrow-up text-blue-500 text-3xl"></i>
+                    <h2 class="title-font text-2xl text-blue-600 font-bold tracking-tight">Cloud Sync</h2>
                 </div>
                 
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-bold text-sl-blue-secondary mb-1 ml-2">Api Key</label>
-                        <input type="text" id="fb-apiKey" class="w-full bg-white border-2 border-sl-blue-secondary/30 rounded-2xl px-4 py-3 outline-none focus:border-sl-blue-primary transition text-gray-700 shadow-inner" placeholder="Enter API Key...">
+                        <label class="block text-sm font-bold text-blue-400 mb-1 ml-3">API Key</label>
+                        <input type="text" id="fb-apiKey" class="w-full bg-blue-50/50 border-2 border-blue-100 rounded-2xl px-5 py-3 outline-none focus:border-blue-500 focus:bg-white transition font-medium" placeholder="Enter API Key...">
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-sl-blue-secondary mb-1 ml-2">DataBase url</label>
-                        <input type="text" id="fb-dbUrl" class="w-full bg-white border-2 border-sl-blue-secondary/30 rounded-2xl px-4 py-3 outline-none focus:border-sl-blue-primary transition text-gray-700 shadow-inner" placeholder="Enter Database URL...">
+                        <label class="block text-sm font-bold text-blue-400 mb-1 ml-3">Database URL</label>
+                        <input type="text" id="fb-dbUrl" class="w-full bg-blue-50/50 border-2 border-blue-100 rounded-2xl px-5 py-3 outline-none focus:border-blue-500 focus:bg-white transition font-medium" placeholder="https://your-db.firebaseio.com">
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-sl-blue-secondary mb-1 ml-2">Node Path</label>
-                        <input type="text" id="fb-path" class="w-full bg-white border-2 border-sl-blue-secondary/30 rounded-2xl px-4 py-3 outline-none focus:border-sl-blue-primary transition text-gray-700 shadow-inner" placeholder="e.g. roof/system1">
+                        <label class="block text-sm font-bold text-blue-400 mb-1 ml-3">Node Path</label>
+                        <input type="text" id="fb-path" class="w-full bg-blue-50/50 border-2 border-blue-100 rounded-2xl px-5 py-3 outline-none focus:border-blue-500 focus:bg-white transition font-medium" placeholder="e.g. roof/device1">
                     </div>
                 </div>
             </div>
 
-            <button id="btn-connect-fb" class="w-full mt-6 bg-sl-blue-primary hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-2xl shadow-md transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2 text-lg">
-                <i class="ph-bold ph-link"></i> Connect with Firebase
+            <button id="btn-connect-fb" class="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-2xl shadow-md transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2 text-lg title-font">
+                <i class="ph-bold ph-broadcast"></i> Connect Cloud Sync
             </button>
         </div>
 
-        <!-- RIGHT COLUMN: HARDWARE LINK & MODE -->
-        <div class="space-y-6">
+        <!-- Right Column containing Hardware Link & Mode Split -->
+        <div class="space-y-6 flex flex-col justify-between">
             
-            <!-- HARDWARE LINK PANEL -->
-            <div class="bg-white rounded-[2rem] p-6 shadow-xl border-4 border-white/40">
-                <h2 class="text-xl text-sl-text-blue font-bold mb-4 tracking-wide ml-2">Hard ware link</h2>
-                <div class="space-y-3">
-                    <button id="btn-connect-ble" class="w-full bg-sl-blue-primary hover:bg-blue-600 text-white font-bold py-3 rounded-2xl shadow-md transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
-                        <i class="ph-bold ph-bluetooth"></i> Connect Microbit
+            <!-- Hardware Link Box -->
+            <div class="bg-white rounded-[2.5rem] p-6 shadow-xl border-4 border-blue-100">
+                <div class="flex items-center gap-3 mb-4">
+                    <i class="ph-bold ph-cpu text-blue-500 text-2xl"></i>
+                    <h2 class="title-font text-xl text-blue-600 font-bold">Hardware Link</h2>
+                </div>
+                
+                <div class="grid grid-cols-1 gap-3">
+                    <button id="btn-connect-ble" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-2xl shadow-md transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2 title-font">
+                        <i class="ph-bold ph-bluetooth-connected"></i> Connect Micro:bit
                     </button>
-                    <button id="btn-disconnect-ble" class="w-full bg-red-500 text-white font-bold py-3 rounded-2xl flex items-center justify-center gap-2 transition hover:bg-red-600 hidden">
-                        <i class="ph-bold ph-x"></i> Disconnect Microbit
+                    <button id="btn-disconnect-ble" class="w-full bg-gray-300 text-gray-500 font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 transition hover:bg-gray-400 hidden title-font">
+                        <i class="ph-bold ph-link-break"></i> Disconnect Micro:bit
                     </button>
                 </div>
-                <div id="ble-status" class="mt-3 text-center text-xs font-bold text-gray-400">● Disconnected</div>
+                <div id="ble-status" class="mt-3 text-center text-xs font-bold text-gray-400 tracking-wider uppercase">● Disconnected</div>
             </div>
 
-            <!-- MODE CONTROL PANEL -->
-            <div class="bg-white rounded-[2rem] p-6 shadow-xl border-4 border-white/40 relative">
-                <div class="absolute top-2 right-6 text-xl opacity-40">☁️</div>
-                <h2 class="text-xl text-sl-text-blue font-bold mb-4 tracking-wide ml-2">Mode</h2>
-                <div class="space-y-3">
-                    <button id="btn-auto" onclick="setMode('auto')" class="w-full bg-sl-blue-primary text-white font-bold py-3 rounded-2xl shadow-md transition flex items-center justify-center gap-2 text-lg border-2 border-transparent">
-                        <i class="ph-fill ph-robot"></i> Outomatic
+            <!-- Mode Selector Box -->
+            <div class="bg-white rounded-[2.5rem] p-6 shadow-xl border-4 border-blue-100">
+                <div class="flex items-center gap-3 mb-4">
+                    <i class="ph-fill ph-gear text-blue-500 text-2xl"></i>
+                    <h2 class="title-font text-xl text-blue-600 font-bold">Mode Selection</h2>
+                </div>
+                
+                <div class="flex flex-col gap-3">
+                    <button id="btn-auto" onclick="setMode('auto')"
+                        class="w-full bg-blue-600 text-white font-bold py-3.5 rounded-2xl shadow-md transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2 title-font text-lg">
+                        <i class="ph-fill ph-robot"></i> Automatic
                     </button>
-                    <button id="btn-manual" onclick="setMode('manual')" class="w-full bg-sl-blue-secondary text-white/90 font-bold py-3 rounded-2xl hover:bg-blue-400 transition flex items-center justify-center gap-2 text-lg border-2 border-transparent">
+                    <button id="btn-manual" onclick="setMode('manual')"
+                        class="w-full bg-blue-100 text-blue-600 font-bold py-3.5 rounded-2xl hover:bg-blue-200 transition flex items-center justify-center gap-2 title-font text-lg">
                         <i class="ph-fill ph-hand-palm"></i> Manual
                     </button>
                 </div>
@@ -139,156 +166,135 @@
         </div>
     </div>
 
-    <!-- BOTTOM ROW GRID: RAIN DETECTED & ROOF STATUS -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+    <!-- MAIN INTERACTIVE MONITORING GRID (Rain State & Roof Action) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         
-        <!-- RAIN DETECTED STATUS PANEL -->
-        <div class="bg-white rounded-[2rem] p-8 shadow-xl border-4 border-white/40 flex flex-col items-center justify-center text-center min-h-[320px]">
-            <h2 class="text-3xl md:text-4xl text-sl-text-blue font-bold mb-6 tracking-wide" id="rain-status-text">Rain detected</h2>
+        <!-- Rain Detected Card -->
+        <div class="bg-white rounded-[2.5rem] p-8 shadow-xl border-4 border-blue-100 flex flex-col items-center justify-center text-center min-h-[320px]">
+            <h2 class="title-font text-3xl md:text-4xl text-blue-600 font-bold mb-6 tracking-tight">Rain Status</h2>
             
-            <div class="relative p-4 bg-sl-blue-light rounded-full mb-4 animate-bounce">
-                <i id="rain-icon" class="ph-fill ph-cloud-rain text-sl-blue-primary text-8xl drop-shadow-md transition-colors duration-500"></i>
+            <div id="rain-indicator-container" class="bg-blue-50 rounded-[2rem] p-8 transition-all duration-500 max-w-[240px] w-full flex flex-col items-center justify-center border border-blue-100">
+                <i id="rain-icon" class="ph-fill ph-cloud-sun text-blue-400 text-7xl mb-3 drop-shadow-md transition-transform duration-500"></i>
+                <div id="rain-status-text" class="title-font text-xl font-bold text-blue-500 tracking-wide uppercase">No Rain</div>
             </div>
-            
-            <div class="w-full max-w-xs mt-2">
-                <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Simulate Rain Sensor</label>
-                <select id="simulate-rain" class="w-full bg-gray-50 border border-gray-200 rounded-xl py-1.5 px-3 text-sm font-bold text-gray-600 outline-none focus:border-sl-blue-primary" onchange="toggleRainSimulation(this.value)">
-                    <option value="rain">Raining (Detected)</option>
-                    <option value="clear" selected>Clear Sky (No Rain)</option>
-                </select>
-            </div>
+            <p class="text-xs text-gray-400 font-semibold mt-4 tracking-wide">Monitored live from Micro:bit pin P0</p>
         </div>
 
-        <!-- ROOF STATUS PANEL (MANUAL OVERRIDE BUTTONS) -->
-        <div class="bg-white rounded-[2rem] p-8 shadow-xl border-4 border-white/40 flex flex-col items-center justify-center min-h-[320px]">
-            <h2 class="text-3xl md:text-4xl text-sl-text-blue font-bold mb-6 tracking-wide lowercase">roof</h2>
+        <!-- Roof Actuator Card -->
+        <div id="roof-card" class="bg-white rounded-[2.5rem] p-8 shadow-xl border-4 border-blue-100 flex flex-col items-center justify-center text-center min-h-[320px] transition-all duration-500">
+            <h2 class="title-font text-3xl md:text-4xl text-blue-600 font-bold mb-6 tracking-tight">Roof Control</h2>
             
-            <div class="w-full space-y-4 max-w-xs flex flex-col items-center">
-                <button id="btn-roof-open" onclick="controlRoof(true)" class="w-full bg-sl-blue-primary text-white font-bold py-3.5 rounded-2xl shadow-md transition text-xl disabled:opacity-50 disabled:cursor-not-allowed">
-                    Open
+            <div class="w-full max-w-[240px] flex flex-col gap-3">
+                <button id="btn-roof-open" onclick="setRoof(true)"
+                    class="w-full bg-blue-600 text-white font-bold py-3.5 rounded-2xl shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed text-lg title-font tracking-wide" disabled>
+                    Open Roof
                 </button>
                 
-                <div class="text-yellow-400 text-2xl my-1 animate-pulse">✦</div>
+                <div class="flex items-center justify-center py-1">
+                    <i id="roof-arrow" class="ph-bold ph-arrows-down-up text-2xl text-blue-300"></i>
+                </div>
                 
-                <button id="btn-roof-close" onclick="controlRoof(false)" class="w-full bg-sl-blue-secondary text-white font-bold py-3.5 rounded-2xl shadow-md transition text-xl disabled:opacity-50 disabled:cursor-not-allowed">
-                    Close
+                <button id="btn-roof-close" onclick="setRoof(false)"
+                    class="w-full bg-blue-100 text-blue-600 font-bold py-3.5 rounded-2xl transition disabled:opacity-50 disabled:cursor-not-allowed text-lg title-font tracking-wide" disabled>
+                    Close Roof
                 </button>
             </div>
+            <p class="text-xs text-gray-400 font-semibold mt-4 tracking-wide">Servo motor driven via pin P1</p>
         </div>
 
     </div>
 
-    <!-- SYSTEM LOG TERMINAL -->
-    <div class="bg-sl-term-bg rounded-3xl p-4 shadow-2xl border-2 border-[#1a4a2d] mt-8">
-        <div class="flex items-center justify-between mb-3 border-b border-[#1a4a2d] pb-3">
+    <!-- SYSTEM TERMINAL LOG -->
+    <div class="bg-sl-term-bg rounded-[2rem] p-4 shadow-xl border-2 border-blue-900 mt-6">
+        <div class="flex items-center justify-between mb-3 border-b border-blue-900/50 pb-3 px-2">
             <div class="flex items-center gap-2">
                 <div class="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
                 <div class="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
                 <div class="w-3 h-3 rounded-full bg-[#27c93f]"></div>
-                <span class="ml-4 terminal-font text-xs text-[#ff5f56] font-bold tracking-wider lowercase">system_terminal – smartline_roof</span>
+                <span class="ml-4 terminal-font text-xs text-blue-400 font-bold tracking-wider">smartline_terminal@console</span>
             </div>
-            <button id="btnClearLog" class="border border-[#ff5f56] text-[#ff5f56] hover:bg-[#ff5f56] hover:text-white transition rounded-full px-4 py-1 text-xs font-bold flex items-center gap-1">
+            <button id="btnClearLog" class="border border-blue-500/50 text-blue-400 hover:bg-blue-900 transition rounded-xl px-4 py-1 text-xs font-bold flex items-center gap-1">
                 <i class="ph-bold ph-trash"></i> Clear
             </button>
         </div>
-        <div id="terminal-content" class="terminal-font bg-[#050f09] rounded-2xl h-36 p-4 text-[11px] text-[#27c93f] overflow-y-auto">
-            <div class="opacity-70">welcome to smartline roof system terminal...</div>
-            <div class="opacity-70">waiting for micro:bit connection...</div>
+        <div id="terminal-content" class="terminal-font bg-[#030914] rounded-xl h-40 p-4 text-xs text-green-400 overflow-y-auto space-y-1">
+            <div class="opacity-60">System Initialized: SmartLine control panel dashboard setup complete...</div>
+            <div class="opacity-60">Status: Waiting for Bluetooth or Cloud Sync infrastructure parameter input...</div>
         </div>
     </div>
 
-</div>
+</main>
 
-<!-- JAVASCRIPT STATE AND LOGIC -->
+<!-- JAVASCRIPT LOGIC BLOCK -->
 <script type="module">
 import { initializeApp, getApps, deleteApp }      from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getDatabase, ref, onValue, update, set } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+import { getDatabase, ref, onValue, update }       from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
-// ── BLE UUIDs (Sangat spesifik untuk Nordic UART Service bawaan micro:bit) ──
+// BLE UUID Infrastructure (Nordic UART Service matching standard Micro:bit profiles)
 const SVC = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
-const TX  = '6e400002-b5a3-f393-e0a9-e50e24dcca9e'; // micro:bit → web
-const RX  = '6e400003-b5a3-f393-e0a9-e50e24dcca9e'; // web → micro:bit
+const TX  = '6e400002-b5a3-f393-e0a9-e50e24dcca9e'; // Transmission notifications from Micro:bit to Web
+const RX  = '6e400003-b5a3-f393-e0a9-e50e24dcca9e'; // Receiving write parameters from Web to Micro:bit
 
+// Application State Management
 const S = {
-    device: null, rxChar: null, bleBuffer: '',
-    mode: 'auto',      
-    roofOpen: true,    
-    rainDetected: false, 
-    db: null, fbPath: ''
+    device: null, 
+    rxChar: null, 
+    bleBuffer: '',
+    mode: 'auto',   // 'auto' | 'manual'
+    roofOpen: true, // true = open, false = closed
+    db: null, 
+    fbPath: ''
 };
 
 const $ = id => document.getElementById(id);
 
-function log(msg, color = '#27c93f') {
+// System Logger Terminal Output
+function log(msg, color = '#34d399') {
     const term = $('terminal-content');
-    if (!term) return;
     const line = document.createElement('div');
-    line.className  = 'opacity-90 py-0.5 terminal-font';
+    line.className = 'opacity-90 py-0.5 terminal-font';
     line.style.color = color;
     line.textContent = `[${new Date().toLocaleTimeString()}] > ${msg}`;
     term.appendChild(line);
     term.scrollTop = term.scrollHeight;
 }
 
-// ── Fungsi Pengiriman Data via BLE Bawaan ──
-function sendBLE(key, val) {
-    if (!S.rxChar) return;
-    const str = `${key}:${val}
-`;
-    const enc = new TextEncoder().encode(str);
-    S.rxChar.writeValue(enc)
-        .then(() => log(`tx → ${key}:${val}`, '#00bfff'))
-        .catch(e => log(`tx error: ${e.message}`, '#ff5f56'));
-}
-
-// ── Bluetooth Connection dengan Penanganan Fleksibel & fallback filter ──
+// Bluetooth GATT Server Connectivity Functions
 async function connectBLE() {
     try {
-        log('initiating requestDevice pairing UI...', '#ffbd2e');
-        
-        // Membuka jendela pencarian bluetooth dengan toleransi nama ataupun service microbit
+        log('Scanning for SmartLine Micro:bit hardware...', '#f59e0b');
         S.device = await navigator.bluetooth.requestDevice({
-            filters: [
-                { namePrefix: 'BBC micro:bit' }
-            ],
+            filters: [{ namePrefix: 'BBC micro:bit' }],
             optionalServices: [SVC]
         });
-        
-        log(`device chosen: ${S.device.name}. connecting to GATT server...`, '#ffbd2e');
         S.device.addEventListener('gattserverdisconnected', onBLEDisconnect);
-        
         const server  = await S.device.gatt.connect();
-        log('GATT connected. fetching primary service...', '#ffbd2e');
-        
         const service = await server.getPrimaryService(SVC);
-        log('service found. linking characteristics...', '#ffbd2e');
-        
         S.rxChar      = await service.getCharacteristic(RX);
         const txChar  = await service.getCharacteristic(TX);
-        
         await txChar.startNotifications();
         txChar.addEventListener('characteristicvaluechanged', onBLEData);
-        
         setBLEStatus(true);
-        log(`connected successfully to ${S.device.name} 🎉`, '#27c93f');
+        log(`Connected successfully: ${S.device.name} hardware online.`, '#10b981');
     } catch (e) {
-        log('pairing error: ' + e.message, '#ff5f56');
-        console.error(e);
+        log('Connection interface error: ' + e.message.toLowerCase(), '#f87171');
     }
 }
 
 function onBLEDisconnect() {
     setBLEStatus(false);
-    log('bluetooth connection lost.', '#ff5f56');
+    log('Hardware Alert: Bluetooth connection was terminated.', '#f87171');
 }
 
-function setBLEStatus(ok) {
-    $('btn-connect-ble').classList.toggle('hidden', ok);
-    $('btn-disconnect-ble').classList.toggle('hidden', !ok);
-    $('ble-status').textContent = ok ? '● Connected' : '● Disconnected';
-    $('ble-status').style.color = ok ? '#27c93f' : '#aaa';
+function setBLEStatus(isConnected) {
+    $('btn-connect-ble').classList.toggle('hidden', isConnected);
+    $('btn-disconnect-ble').classList.toggle('hidden', !isConnected);
+    $('ble-status').textContent = isConnected ? '● Connected' : '● Disconnected';
+    $('ble-status').style.color = isConnected ? '#10b981' : '#9ca3af';
 }
 
+// Inbound Stream Parser ("key:value
+")
 function onBLEData(e) {
     S.bleBuffer += new TextDecoder().decode(e.target.value);
     const lines = S.bleBuffer.split('
@@ -300,148 +306,189 @@ function onBLEData(e) {
         const idx = line.indexOf(':');
         const key = line.substring(0, idx).trim();
         const val = line.substring(idx + 1).trim();
-        log(`rx ← ${key}:${val}`, '#a8ff78');
+        log(`Received inbound data packets -> ${key}:${val}`, '#60a5fa');
         handleIncoming(key, val);
     });
 }
 
+// Central Controller Inbound Telemetry Evaluator
 function handleIncoming(key, val) {
     switch (key) {
         case 'rain':
+            // Telemetry input syntax -> '1' = rain detected, '0' = clear weather
             const isRaining = val.trim() === '1';
-            S.rainDetected = isRaining;
-            applyRainUI(isRaining);
-            
-            if (S.mode === 'auto') {
-                if (isRaining) {
-                    log('auto mode: rain detected -> closing roof.', '#ffbd2e');
-                    applyRoofUI(false);
-                } else {
-                    log('auto mode: clear sky -> opening roof.', '#ffbd2e');
-                    applyRoofUI(true);
-                }
-            }
+            updateRainUI(isRaining);
             break;
 
-        case 'Relay':
-            applyRoofUI(val.trim() === '0'); 
+        case 'roof':
+            // Telemetry tracking actuator position -> '1' = open position, '0' = closed position
+            updateRoofUI(val.trim() === '1');
             break;
 
         case 'mode':
+            // Telemetry tracking mode constraints -> '1' = auto rule evaluation, '0' = manual override
             applyModeUI(val.trim() === '1' ? 'auto' : 'manual');
             break;
     }
 
+    // Direct Cloud Real-time Database Pipeline mirroring sync rules
     if (S.db) {
-        update(ref(S.db, `${S.fbPath}/${key}`), { value: parseFloat(val) || 0 }).catch(() => {});
+        update(ref(S.db, `${S.fbPath}/${key}`), { value: parseFloat(val) || 0 })
+            .catch(() => {});
     }
 }
 
-window.toggleRainSimulation = function(val) {
-    const sensorValue = (val === 'rain') ? '1' : '0';
-    log(`simulating rain sensor input value: ${sensorValue}`, '#ffbd2e');
-    handleIncoming('rain', sensorValue);
-};
-
-function applyRainUI(isRaining) {
-    const textEl = $('rain-status-text');
-    const iconEl = $('rain-icon');
-    if (isRaining) {
-        textEl.textContent = "Rain detected";
-        iconEl.className = "ph-fill ph-cloud-rain text-sl-blue-primary text-8xl drop-shadow-md transition-colors duration-500";
-    } else {
-        textEl.textContent = "No Rain / Clear";
-        iconEl.className = "ph-fill ph-sun text-yellow-400 text-8xl drop-shadow-md transition-colors duration-500";
+// Cloud Database Synchronization Configurator
+async function connectFirebase() {
+    const apiKey = $('fb-apiKey').value.trim();
+    const dbUrl  = $('fb-dbUrl').value.trim();
+    const path   = $('fb-path').value.trim() || 'roof/device1';
+    
+    if (!apiKey || !dbUrl) { 
+        alert('Please complete both API Key and Database Endpoint URL parameters.'); 
+        return; 
+    }
+    try {
+        const apps = getApps();
+        if (apps.length) await deleteApp(apps[0]);
+        const app = initializeApp({
+            apiKey,
+            databaseURL: dbUrl,
+            projectId: dbUrl.replace('https://','').split('.')[0]
+        });
+        S.db     = getDatabase(app);
+        S.fbPath = path;
+        log(`Cloud Link Operational: Firebase hooked onto nodes at /${path}`, '#10b981');
+        
+        onValue(ref(S.db, path), snap => {
+            const d = snap.val();
+            if (!d) return;
+            ['rain','roof','mode'].forEach(k => {
+                if (d[k] !== undefined) {
+                    handleIncoming(k, String(d[k]?.value ?? d[k]));
+                }
+            });
+        }, err => log('Cloud Data Pipeline Error: ' + err.message, '#f87171'));
+    } catch (e) {
+        log('Cloud initialization error parameter: ' + e.message, '#f87171');
     }
 }
 
-window.setMode = function(mode) {
-    sendBLE('mode', mode === 'auto' ? 1 : 0);
-    log(`mode command → ${mode} (sent: mode,${mode === 'auto' ? 1 : 0})`, '#ffbd2e');
-    applyModeUI(mode);
-    if (S.db) update(ref(S.db, `${S.fbPath}/mode`), { value: mode === 'auto' ? 1 : 0 }).catch(() => {});
+// Actuator State Machine Action Interface
+window.setMode = function(targetMode) {
+    // Mode parameters pipeline format: auto -> mode,1
+ | manual -> mode,0
+
+    sendBLE('mode', targetMode === 'auto' ? 1 : 0);
+    log(`Mode adjustment triggered -> ${targetMode.toUpperCase()} (dispatched code: mode,${targetMode === 'auto' ? 1 : 0})`, '#f59e0b');
+    applyModeUI(targetMode);
+
+    if (S.db) update(ref(S.db, `${S.fbPath}/mode`), { value: targetMode === 'auto' ? 1 : 0 }).catch(() => {});
 };
 
 function applyModeUI(mode) {
     S.mode = mode;
     const isAuto = mode === 'auto';
     
-    const activeClass = "w-full bg-sl-blue-primary text-white font-bold py-3 rounded-2xl shadow-md transition flex items-center justify-center gap-2 text-lg border-2 border-transparent";
-    const inactiveClass = "w-full bg-sl-blue-secondary text-white/90 font-bold py-3 rounded-2xl hover:bg-blue-400 transition flex items-center justify-center gap-2 text-lg border-2 border-transparent opacity-60";
-    
-    $('btn-auto').className = isAuto ? activeClass : inactiveClass;
-    $('btn-manual').className = !isAuto ? activeClass : inactiveClass;
-    
-    $('btn-roof-open').disabled = isAuto;
-    $('btn-roof-close').disabled = isAuto;
-    
-    log(`mode ui updated → ${mode}`, '#aaffaa');
-    
+    // UI Theme transformation layout updates mapping to selected operating guidelines
     if (isAuto) {
-        if (S.rainDetected) applyRoofUI(false);
-        else applyRoofUI(true);
+        $('btn-auto').className = "w-full bg-blue-600 text-white font-bold py-3.5 rounded-2xl shadow-md transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2 title-font text-lg";
+        $('btn-manual').className = "w-full bg-blue-100 text-blue-600 font-bold py-3.5 rounded-2xl hover:bg-blue-200 transition flex items-center justify-center gap-2 title-font text-lg";
+        $('btn-roof-open').disabled = true;
+        $('btn-roof-close').disabled = true;
+    } else {
+        $('btn-auto').className = "w-full bg-blue-100 text-blue-600 font-bold py-3.5 rounded-2xl hover:bg-blue-200 transition flex items-center justify-center gap-2 title-font text-lg";
+        $('btn-manual').className = "w-full bg-blue-600 text-white font-bold py-3.5 rounded-2xl shadow-md transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2 title-font text-lg";
+        $('btn-roof-open').disabled = false;
+        $('btn-roof-close').disabled = false;
     }
+    log(`Mode display sync set to -> ${mode.toUpperCase()}`, '#60a5fa');
 }
 
-window.controlRoof = function(openTarget) {
-    if (S.mode === 'auto') return;
-    const relayValue = openTarget ? 0 : 1;
-    sendBLE('Relay', relayValue);
-    log(`roof manual command → ${openTarget ? 'open' : 'close'} (sent: Relay,${relayValue})`, '#ffbd2e');
-    applyRoofUI(openTarget);
-    if (S.db) update(ref(S.db, `${S.fbPath}/Relay`), { value: relayValue }).catch(() => {});
+// Actuator Position Command Sender (Manual Control Interface)
+window.setRoof = function(shouldOpen) {
+    if (S.mode === 'auto') {
+        log('Action blocked: Manual override is rejected while System Mode is locked to Automatic.', '#f87171');
+        return;
+    }
+    // Action format syntax payload mapping: Open -> roof,1
+ | Close -> roof,0
+
+    sendBLE('roof', shouldOpen ? 1 : 0);
+    log(`Roof actuation dispatching command -> ${shouldOpen ? 'OPEN' : 'CLOSE'} (dispatched code: roof,${shouldOpen ? 1 : 0})`, '#f59e0b');
+    updateRoofUI(shouldOpen);
+
+    if (S.db) update(ref(S.db, `${S.fbPath}/roof`), { value: shouldOpen ? 1 : 0 }).catch(() => {});
 };
 
-function applyRoofUI(isOpen) {
+// Actuator Presentation UI Rendering
+function updateRoofUI(isOpen) {
     S.roofOpen = isOpen;
-    const btnOpen = $('btn-roof-open');
+    const btnOpen  = $('btn-roof-open');
     const btnClose = $('btn-roof-close');
-    
-    const activeBtn = "w-full bg-sl-blue-primary text-white font-bold py-3.5 rounded-2xl shadow-md transition text-xl border-2 border-blue-300 scale-105";
-    const inactiveBtn = "w-full bg-sl-blue-secondary text-white font-bold py-3.5 rounded-2xl shadow-md transition text-xl opacity-60 scale-100";
-    
+    const card     = $('roof-card');
+    const arrow    = $('roof-arrow');
+
     if (isOpen) {
-        btnOpen.className = activeBtn;
-        btnClose.className = inactiveBtn;
+        btnOpen.className = "w-full bg-blue-600 text-white font-bold py-3.5 rounded-2xl shadow-md transition text-lg title-font tracking-wide";
+        btnClose.className = "w-full bg-blue-100 text-blue-600 font-bold py-3.5 rounded-2xl transition text-lg title-font tracking-wide";
+        card.classList.remove('active-glow');
+        arrow.className = "ph-bold ph-arrows-down-up text-2xl text-blue-300";
     } else {
-        btnOpen.className = inactiveBtn;
-        btnClose.className = activeBtn;
+        btnOpen.className = "w-full bg-blue-100 text-blue-600 font-bold py-3.5 rounded-2xl transition text-lg title-font tracking-wide";
+        btnClose.className = "w-full bg-blue-600 text-white font-bold py-3.5 rounded-2xl shadow-md transition text-lg title-font tracking-wide";
+        card.classList.add('active-glow');
+        arrow.className = "ph-bold ph-arrows-down-up text-2xl text-blue-500 animate-bounce";
     }
 }
 
-async function connectFirebase() {
-    const apiKey = $('fb-apiKey').value.trim();
-    const dbUrl  = $('fb-dbUrl').value.trim();
-    const path   = $('fb-path').value.trim() || 'roof/system1';
-    if (!apiKey || !dbUrl) { alert('Please fill in API Key and Database URL!'); return; }
+// Sensor Presentation UI Rendering
+function updateRainUI(isRaining) {
+    const container = $('rain-indicator-container');
+    const icon      = $('rain-icon');
+    const txt       = $('rain-status-text');
+
+    if (isRaining) {
+        container.className = "bg-blue-400 rounded-[2rem] p-8 transition-all duration-500 max-w-[240px] w-full flex flex-col items-center justify-center border border-blue-300 rain-glow";
+        icon.className = "ph-fill ph-cloud-rain text-white text-7xl mb-3 drop-shadow-md animate-pulse";
+        txt.className = "title-font text-xl font-bold text-white tracking-wide uppercase";
+        txt.textContent = "Rain Detected";
+        log('Sensor Event: Rain precipitation threshold reached!', '#60a5fa');
+    } else {
+        container.className = "bg-blue-50 rounded-[2rem] p-8 transition-all duration-500 max-w-[240px] w-full flex flex-col items-center justify-center border border-blue-100";
+        icon.className = "ph-fill ph-cloud-sun text-blue-400 text-7xl mb-3 drop-shadow-md";
+        txt.className = "title-font text-xl font-bold text-blue-500 tracking-wide uppercase";
+        txt.textContent = "No Rain";
+    }
+}
+
+// Outbound Data Transmission Dispatch Handler
+async function sendBLE(key, val) {
+    if (!S.rxChar) {
+        log('Transmission failure: Micro:bit connection context handle not found.', '#f87171');
+        return;
+    }
+    const payload = `${key},${val}
+`;
     try {
-        const apps = getApps();
-        if (apps.length) await deleteApp(apps[0]);
-        const app = initializeApp({ apiKey, databaseURL: dbUrl, projectId: dbUrl.replace('https://','').split('.')[0] });
-        S.db     = getDatabase(app);
-        S.fbPath = path;
-        log(`firebase connected → /${path}`, '#27c93f');
-        onValue(ref(S.db, path), snap => {
-            const d = snap.val();
-            if (!d) return;
-            ['rain','Relay','mode'].forEach(k => {
-                if (d[k] !== undefined) handleIncoming(k, String(d[k]?.value ?? d[k]));
-            });
-        }, err => log('firebase error: ' + err.message, '#ff5f56'));
+        await S.rxChar.writeValue(new TextEncoder().encode(payload));
+        log(`Transmitted code string pipeline -> ${key},${val}`, '#eab308');
     } catch (e) {
-        log('firebase error: ' + e.message, '#ff5f56');
+        log('UART data block write error exception: ' + e.message.toLowerCase(), '#f87171');
     }
 }
 
+// Component Event Registries
 $('btn-connect-ble').onclick    = connectBLE;
 $('btn-disconnect-ble').onclick = () => { if (S.device) S.device.gatt.disconnect(); };
 $('btn-connect-fb').onclick     = connectFirebase;
 $('btnClearLog').onclick        = () => { $('terminal-content').innerHTML = ''; };
 
+// System Entry Initialization
 window.onload = () => {
-    applyModeUI('auto');
-    applyRainUI(false);
-    log('smartline roof control system ready — connect firebase & micro:bit 🚀');
+    applyModeUI('auto'); // Establish rule verification pipeline defaults
+    updateRoofUI(true);  // Establishes default starting deployment layout position
+    log('SmartLine Controller Online. Ready for peripheral alignment tasks.');
 };
 </script>
 </body>
