@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartLine - Smart Roof System</title>
+    <title>SmartLine - Smart Roof System v2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
@@ -57,12 +57,24 @@
         </div>
     </div>
 
+    <!-- TROUBLESHOOTING GUIDE CARD (IMPORTANT FOR MICROBIT BLE PROBLEMS) -->
+    <div class="bg-amber-50 border-4 border-amber-300 rounded-3xl p-5 mb-6 shadow-lg">
+        <h3 class="text-amber-800 font-bold text-lg mb-2 flex items-center gap-2">
+            <i class="ph-bold ph-warning-circle"></i> Connection Requirements / Kenapa micro:bit Tidak Konek?
+        </h3>
+        <ul class="text-sm text-amber-900 list-disc pl-5 space-y-1 opacity-90">
+            <li><strong>HTTPS / Localhost:</strong> Web Bluetooth hanya berfungsi jika website dibuka melalui protokol aman <code>https://</code> atau via <code>localhost</code> (Live Server).</li>
+            <li><strong>Browser Support:</strong> Gunakan browser berbasis Chromium seperti <strong>Google Chrome</strong>, <strong>Microsoft Edge</strong>, atau <strong>Opera</strong> (Safari dan Firefox tidak mendukung Web Bluetooth secara bawaan).</li>
+            <li><strong>Bluetooth Terbuka:</strong> Pastikan Bluetooth di komputer/HP Anda sudah dinyalakan dan tidak sedang tersambung ke aplikasi lain.</li>
+            <li><strong>Flash Firmware:</strong> Pastikan micro:bit sudah di-flash dengan kode program yang mengaktifkan Bluetooth Service (UART Service) dengan mode "No Bonding" / pasangkan tanpa pin.</li>
+        </ul>
+    </div>
+
     <!-- MAIN GRID SECTION -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
         
         <!-- LEFT COLUMN: CLOUD SYNC -->
         <div class="bg-white rounded-[2rem] p-8 shadow-xl border-4 border-white/40 relative overflow-hidden h-full min-h-[420px] flex flex-col justify-between">
-            <!-- Decorative Flower/Cloud Background Elements like Image -->
             <div class="absolute -top-4 -left-4 w-12 h-12 opacity-20 text-sl-blue-primary text-4xl">🌼</div>
             <div class="absolute -bottom-4 -right-4 w-12 h-12 opacity-20 text-sl-blue-primary text-4xl">🌼</div>
             
@@ -101,10 +113,10 @@
                 <h2 class="text-xl text-sl-text-blue font-bold mb-4 tracking-wide ml-2">Hard ware link</h2>
                 <div class="space-y-3">
                     <button id="btn-connect-ble" class="w-full bg-sl-blue-primary hover:bg-blue-600 text-white font-bold py-3 rounded-2xl shadow-md transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
-                        <i class="ph-bold ph-bluetooth"></i> Microbit connected
+                        <i class="ph-bold ph-bluetooth"></i> Connect Microbit
                     </button>
-                    <button id="btn-disconnect-ble" class="w-full bg-sl-blue-secondary text-white font-bold py-3 rounded-2xl flex items-center justify-center gap-2 transition hover:bg-blue-400 hidden">
-                        <i class="ph-bold ph-x"></i> Microbit Disconnected
+                    <button id="btn-disconnect-ble" class="w-full bg-red-500 text-white font-bold py-3 rounded-2xl flex items-center justify-center gap-2 transition hover:bg-red-600 hidden">
+                        <i class="ph-bold ph-x"></i> Disconnect Microbit
                     </button>
                 </div>
                 <div id="ble-status" class="mt-3 text-center text-xs font-bold text-gray-400">● Disconnected</div>
@@ -135,11 +147,9 @@
             <h2 class="text-3xl md:text-4xl text-sl-text-blue font-bold mb-6 tracking-wide" id="rain-status-text">Rain detected</h2>
             
             <div class="relative p-4 bg-sl-blue-light rounded-full mb-4 animate-bounce">
-                <!-- Rain Display SVG / Icon dynamically changing color -->
                 <i id="rain-icon" class="ph-fill ph-cloud-rain text-sl-blue-primary text-8xl drop-shadow-md transition-colors duration-500"></i>
             </div>
             
-            <!-- Hidden input slider/toggle simulate rain sensor input (useful for testing without hardware) -->
             <div class="w-full max-w-xs mt-2">
                 <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Simulate Rain Sensor</label>
                 <select id="simulate-rain" class="w-full bg-gray-50 border border-gray-200 rounded-xl py-1.5 px-3 text-sm font-bold text-gray-600 outline-none focus:border-sl-blue-primary" onchange="toggleRainSimulation(this.value)">
@@ -158,7 +168,6 @@
                     Open
                 </button>
                 
-                <!-- Center Diamond Accent from reference image -->
                 <div class="text-yellow-400 text-2xl my-1 animate-pulse">✦</div>
                 
                 <button id="btn-roof-close" onclick="controlRoof(false)" class="w-full bg-sl-blue-secondary text-white font-bold py-3.5 rounded-2xl shadow-md transition text-xl disabled:opacity-50 disabled:cursor-not-allowed">
@@ -169,7 +178,7 @@
 
     </div>
 
-    <!-- RE-IMPLEMENTED SYSTEM LOG TERMINAL FROM ORIGINAL -->
+    <!-- SYSTEM LOG TERMINAL -->
     <div class="bg-sl-term-bg rounded-3xl p-4 shadow-2xl border-2 border-[#1a4a2d] mt-8">
         <div class="flex items-center justify-between mb-3 border-b border-[#1a4a2d] pb-3">
             <div class="flex items-center gap-2">
@@ -190,28 +199,26 @@
 
 </div>
 
-<!-- JAVASCRIPT STATE AND LOGIC PRESERVING ALL FUNCTIONALITIES -->
+<!-- JAVASCRIPT STATE AND LOGIC -->
 <script type="module">
 import { initializeApp, getApps, deleteApp }      from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import { getDatabase, ref, onValue, update, set } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
-// ── BLE UUIDs ──
+// ── BLE UUIDs (Sangat spesifik untuk Nordic UART Service bawaan micro:bit) ──
 const SVC = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
 const TX  = '6e400002-b5a3-f393-e0a9-e50e24dcca9e'; // micro:bit → web
 const RX  = '6e400003-b5a3-f393-e0a9-e50e24dcca9e'; // web → micro:bit
 
-// ── Application State ──
 const S = {
     device: null, rxChar: null, bleBuffer: '',
-    mode: 'auto',      // 'auto' | 'manual'
-    roofOpen: true,    // true = open, false = close (maps to relay logic)
+    mode: 'auto',      
+    roofOpen: true,    
     rainDetected: false, 
     db: null, fbPath: ''
 };
 
 const $ = id => document.getElementById(id);
 
-// ── Terminal Logger ──
 function log(msg, color = '#27c93f') {
     const term = $('terminal-content');
     if (!term) return;
@@ -223,25 +230,50 @@ function log(msg, color = '#27c93f') {
     term.scrollTop = term.scrollHeight;
 }
 
-// ── Bluetooth Connection ──
+// ── Fungsi Pengiriman Data via BLE Bawaan ──
+function sendBLE(key, val) {
+    if (!S.rxChar) return;
+    const str = `${key}:${val}
+`;
+    const enc = new TextEncoder().encode(str);
+    S.rxChar.writeValue(enc)
+        .then(() => log(`tx → ${key}:${val}`, '#00bfff'))
+        .catch(e => log(`tx error: ${e.message}`, '#ff5f56'));
+}
+
+// ── Bluetooth Connection dengan Penanganan Fleksibel & fallback filter ──
 async function connectBLE() {
     try {
-        log('searching for micro:bit...', '#ffbd2e');
+        log('initiating requestDevice pairing UI...', '#ffbd2e');
+        
+        // Membuka jendela pencarian bluetooth dengan toleransi nama ataupun service microbit
         S.device = await navigator.bluetooth.requestDevice({
-            filters: [{ namePrefix: 'BBC micro:bit' }],
+            filters: [
+                { namePrefix: 'BBC micro:bit' }
+            ],
             optionalServices: [SVC]
         });
+        
+        log(`device chosen: ${S.device.name}. connecting to GATT server...`, '#ffbd2e');
         S.device.addEventListener('gattserverdisconnected', onBLEDisconnect);
+        
         const server  = await S.device.gatt.connect();
+        log('GATT connected. fetching primary service...', '#ffbd2e');
+        
         const service = await server.getPrimaryService(SVC);
+        log('service found. linking characteristics...', '#ffbd2e');
+        
         S.rxChar      = await service.getCharacteristic(RX);
         const txChar  = await service.getCharacteristic(TX);
+        
         await txChar.startNotifications();
         txChar.addEventListener('characteristicvaluechanged', onBLEData);
+        
         setBLEStatus(true);
-        log(`connected: ${S.device.name} ✅`, '#27c93f');
+        log(`connected successfully to ${S.device.name} 🎉`, '#27c93f');
     } catch (e) {
-        log('connection failed: ' + e.message.toLowerCase(), '#ff5f56');
+        log('pairing error: ' + e.message, '#ff5f56');
+        console.error(e);
     }
 }
 
@@ -257,7 +289,6 @@ function setBLEStatus(ok) {
     $('ble-status').style.color = ok ? '#27c93f' : '#aaa';
 }
 
-// ── Data Processing ──
 function onBLEData(e) {
     S.bleBuffer += new TextDecoder().decode(e.target.value);
     const lines = S.bleBuffer.split('
@@ -274,16 +305,13 @@ function onBLEData(e) {
     });
 }
 
-// ── Incoming Key / Value Handler ──
 function handleIncoming(key, val) {
     switch (key) {
         case 'rain':
-            // 1 = rain detected, 0 = clear
             const isRaining = val.trim() === '1';
             S.rainDetected = isRaining;
             applyRainUI(isRaining);
             
-            // Logic requirement: If outomatic mode and rain detected -> close roof. If clear -> open roof.
             if (S.mode === 'auto') {
                 if (isRaining) {
                     log('auto mode: rain detected -> closing roof.', '#ffbd2e');
@@ -296,25 +324,19 @@ function handleIncoming(key, val) {
             break;
 
         case 'Relay':
-            // Preserving Relay key but mapping it internally to Roof status display
-            // 1 = Relay active (Roof Closed), 0 = Relay inactive (Roof Open)
             applyRoofUI(val.trim() === '0'); 
             break;
 
         case 'mode':
-            // 1 = automatic, 0 = manual
             applyModeUI(val.trim() === '1' ? 'auto' : 'manual');
             break;
     }
 
-    // Firebase Sync Engine
     if (S.db) {
-        update(ref(S.db, `${S.fbPath}/${key}`), { value: parseFloat(val) || 0 })
-            .catch(() => {});
+        update(ref(S.db, `${S.fbPath}/${key}`), { value: parseFloat(val) || 0 }).catch(() => {});
     }
 }
 
-// ── Rain Simulation Trigger ──
 window.toggleRainSimulation = function(val) {
     const sensorValue = (val === 'rain') ? '1' : '0';
     log(`simulating rain sensor input value: ${sensorValue}`, '#ffbd2e');
@@ -324,7 +346,6 @@ window.toggleRainSimulation = function(val) {
 function applyRainUI(isRaining) {
     const textEl = $('rain-status-text');
     const iconEl = $('rain-icon');
-    
     if (isRaining) {
         textEl.textContent = "Rain detected";
         iconEl.className = "ph-fill ph-cloud-rain text-sl-blue-primary text-8xl drop-shadow-md transition-colors duration-500";
@@ -334,13 +355,10 @@ function applyRainUI(isRaining) {
     }
 }
 
-// ── Mode Engine ──
 window.setMode = function(mode) {
     sendBLE('mode', mode === 'auto' ? 1 : 0);
     log(`mode command → ${mode} (sent: mode,${mode === 'auto' ? 1 : 0})`, '#ffbd2e');
-
     applyModeUI(mode);
-
     if (S.db) update(ref(S.db, `${S.fbPath}/mode`), { value: mode === 'auto' ? 1 : 0 }).catch(() => {});
 };
 
@@ -354,37 +372,23 @@ function applyModeUI(mode) {
     $('btn-auto').className = isAuto ? activeClass : inactiveClass;
     $('btn-manual').className = !isAuto ? activeClass : inactiveClass;
     
-    // Disable manual controls when in Automatic mode
     $('btn-roof-open').disabled = isAuto;
     $('btn-roof-close').disabled = isAuto;
     
     log(`mode ui updated → ${mode}`, '#aaffaa');
     
-    // If switched back to auto, run immediate check based on rain status
     if (isAuto) {
-        if (S.rainDetected) {
-            applyRoofUI(false);
-        } else {
-            applyRoofUI(true);
-        }
+        if (S.rainDetected) applyRoofUI(false);
+        else applyRoofUI(true);
     }
 }
 
-// ── Roof Control Engine (Replacing Relay Toggle) ──
 window.controlRoof = function(openTarget) {
-    if (S.mode === 'auto') {
-        log('cannot control roof manually in auto mode.', '#ff5f56');
-        return;
-    }
-    
-    // Mapping roof Open/Close state to the original Relay output syntax logic:
-    // Open = Relay 0, Close = Relay 1
+    if (S.mode === 'auto') return;
     const relayValue = openTarget ? 0 : 1;
     sendBLE('Relay', relayValue);
     log(`roof manual command → ${openTarget ? 'open' : 'close'} (sent: Relay,${relayValue})`, '#ffbd2e');
-
     applyRoofUI(openTarget);
-
     if (S.db) update(ref(S.db, `${S.fbPath}/Relay`), { value: relayValue }).catch(() => {});
 };
 
@@ -399,15 +403,12 @@ function applyRoofUI(isOpen) {
     if (isOpen) {
         btnOpen.className = activeBtn;
         btnClose.className = inactiveBtn;
-        log('roof status ui updated -> OPEN', '#aaffaa');
     } else {
         btnOpen.className = inactiveBtn;
         btnClose.className = activeBtn;
-        log('roof status ui updated -> CLOSED', '#aaffaa');
     }
 }
 
-// ── Firebase Connection ──
 async function connectFirebase() {
     const apiKey = $('fb-apiKey').value.trim();
     const dbUrl  = $('fb-dbUrl').value.trim();
@@ -416,11 +417,7 @@ async function connectFirebase() {
     try {
         const apps = getApps();
         if (apps.length) await deleteApp(apps[0]);
-        const app = initializeApp({
-            apiKey,
-            databaseURL: dbUrl,
-            projectId: dbUrl.replace('https://','').split('.')[0]
-        });
+        const app = initializeApp({ apiKey, databaseURL: dbUrl, projectId: dbUrl.replace('https://','').split('.')[0] });
         S.db     = getDatabase(app);
         S.fbPath = path;
         log(`firebase connected → /${path}`, '#27c93f');
@@ -428,9 +425,7 @@ async function connectFirebase() {
             const d = snap.val();
             if (!d) return;
             ['rain','Relay','mode'].forEach(k => {
-                if (d[k] !== undefined) {
-                    handleIncoming(k, String(d[k]?.value ?? d[k]));
-                }
+                if (d[k] !== undefined) handleIncoming(k, String(d[k]?.value ?? d[k]));
             });
         }, err => log('firebase error: ' + err.message, '#ff5f56'));
     } catch (e) {
@@ -438,15 +433,14 @@ async function connectFirebase() {
     }
 }
 
-// ── Event Initialization ──
 $('btn-connect-ble').onclick    = connectBLE;
 $('btn-disconnect-ble').onclick = () => { if (S.device) S.device.gatt.disconnect(); };
 $('btn-connect-fb').onclick     = connectFirebase;
 $('btnClearLog').onclick        = () => { $('terminal-content').innerHTML = ''; };
 
 window.onload = () => {
-    applyModeUI('auto'); // Default startup system state
-    applyRainUI(false);  // Default starting rain sensor simulation state
+    applyModeUI('auto');
+    applyRainUI(false);
     log('smartline roof control system ready — connect firebase & micro:bit 🚀');
 };
 </script>
